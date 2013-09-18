@@ -7,8 +7,193 @@
     <meta name="description" content=" Historia de la Calidad : anoguera" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <title> Historia de la Calidad</title>
+    <style>
+#right_corner {
+  width:120px;
+  height:80px;
+  color:#fff;
+  position:fixed;
+  right:0;
+  bottom:0;
+  background-color:red;
+  text-align:center;
+  padding-top:40px;
+}
+  
+a.selected {
+  background-color:#1F75CC;
+  color:#FFF;
+  z-index:100;
+}
+
+.messagepop {
+  background-color:#FFF;
+  color:#000;
+  border:1px solid #999;
+  cursor:default;
+  display:none;
+  margin-top:15px;
+  position:fixed;
+  top:35%;
+  left:35%;
+  text-align:left;
+  width:394px;
+  z-index:50;
+  padding:25px 25px 20px;
+}
+
+label {
+  display:block;
+  margin-bottom:3px;
+  padding-left:15px;
+  text-indent:-15px;
+}
+
+.messagepop p,.messagepop.div {
+  border-bottom:1px solid #EFEFEF;
+  padding-bottom:8px;
+  margin:8px 0;
+}
+
+</style>
+<script  type="text/javascript">
+  
+  var Question = new Array();
+var FirstAnswer = new Array();
+var SecondAnswer = new Array();
+var CheckFirstAnswer = new Array();
+var Conclusion = new Array();
+var CorrectAnswers = 0;
+
+Question[0] = '¿En qué época surge el sistema industrial moderno?';
+Question[1] = '¿Qué es el control de calidad estadístico?';
+Question[2] = '¿En que año se creo American Society for Quality Control?';
+Question[3] = '¿Qué paies fue el principal competidor de E.U. enc uestion de caliad, después de adoptar una visión de calidad en todos sus productos?';
+Question[4] = 'Significado de ISO';
+Question[5] = '¿Conjunto de normas encargadas de la gestión de la calidad?';
+Question[5] = '';
+Question[5] = '';
+
+FirstAnswer[0] = '1 - First Answer';
+FirstAnswer[1] = '2 - First Answer';
+FirstAnswer[2] = '3 - First Answer';
+FirstAnswer[3] = '4 - First Answer';
+FirstAnswer[4] = '5 - First Answer';
+FirstAnswer[5] = '6 - First Answer';
+
+SecondAnswer[0] = '1 - Second Answer';
+SecondAnswer[1] = '2 - Second Answer';
+SecondAnswer[2] = '3 - Second Answer';
+SecondAnswer[3] = '4 - Second Answer';
+SecondAnswer[4] = '5 - Second Answer';
+SecondAnswer[5] = '6 - Second Answer';
+
+CheckFirstAnswer[0]=1;
+CheckFirstAnswer[1]=0;
+CheckFirstAnswer[2]=0;
+CheckFirstAnswer[3]=1;
+CheckFirstAnswer[4]=1;
+CheckFirstAnswer[5]=0;
+
+Conclusion[0] = 'First Conclusion';
+Conclusion[1] = 'Second Conclusion';
+Conclusion[2] = 'Third Conclusion';
+Conclusion[3] = 'Forth Conclusion';
+Conclusion[4] = 'Fifth Conclusion';
+Conclusion[5] = 'Sixth Conclusion';
+
+
+///////////////////////////////////////////////
+
+
+// question number
+var currentQ = -1;
+
+function showNewQuestion(el) {
+    currentQ++; // increment question number
+    if (currentQ == Question.length){
+      $('.messagepop').html('Resultado: '+CorrectAnswers+'/'+Question.length+'<br/><a href="#" id="next" >Volver a Iniciar</a>');
+      CorrectAnswers =0;
+      currentQ = -1; 
+    }else{
+      $('.messagepop').html( Question[currentQ] + '<br />' + 
+                          '<a href="#" class="first">' + FirstAnswer[currentQ] + '</a><br />' + 
+                          '<a href="#" class="second">' + SecondAnswer[currentQ] + '</a><br />');
+    }
+}
+
+///////////////////////////////////////////////
+    
+function validate(answer) {
+    var firstIsTrue = CheckFirstAnswer[currentQ];
+  
+    // correct answer (new question)
+    if (  firstIsTrue && answer == 1
+      || !firstIsTrue && answer == 2 ) {
+      $('.messagepop').html('Correcto<br/><a href="#" id="next" >Siguiente</a>')
+      CorrectAnswers++;
+    } 
+  
+    // incorrect answer  (conclusion)
+    else  {
+       $('.messagepop').html('Incorrecto<br/><a href="#" id="next" >Siguiente</a>')//Conclusion[currentQ]);
+    }
+}
+
+///////////////////////////////////////////////
+
+$(function () {
+
+  $("#container_div").live('click', function (event) {
+    
+    // which element was clicked
+    var el = $(event.target);
+    
+    // first answer was clicked
+    if (el.hasClass("first")) {
+        validate(1);
+    } 
+    
+    // second answer was clicked
+    else if (el.hasClass("second")) { 
+        validate(2);
+    } 
+    
+    // questions opener was clicked
+    else if (el.attr("id") == "questions" ) {
+        el.addClass("selected").parent()
+          .append('<div class="messagepop pop" />');
+        showNewQuestion();
+        $(".pop").slideFadeToggle();
+    }
+    
+     else if (el.attr("id") == "next") {
+        showNewQuestion();
+    }
+    
+    // popup close was clicked
+    else if (el.hasClass("close")) {
+        $(".pop").slideFadeToggle();
+        $("#questions").removeClass("selected");
+    }
+  });
+});
+
+///////////////////////////////////////////////
+
+//animate  
+$.fn.slideFadeToggle = function (easing, callback) {
+    return this.animate({
+        opacity: 'toggle',
+        height: 'toggle'
+    }, "fast", easing, callback);
+};
+
+///////////////////////////////////////////////
+
+</script>
   </head>
 
   <body>
